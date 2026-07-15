@@ -234,34 +234,9 @@ curl http://localhost:5000/watchlist/{user_id}
 
 ---
 
-## Screenshots & Evidence
+## Screenshot of git log:
 
-### Test Results
 
-```text
-10 passed in 0.68s ✅
-- 4 collection tests (existing)
-- 6 watchlist tests (new)
-```
-
-**Screenshot of test output:**
-[Add screenshot of pytest output here]
-
-### App Running
-
-**Screenshot of Flask app starting successfully:**
-[Add screenshot of app initialization here]
-
-### API Endpoints Working
-
-**Screenshot of successful API calls:**
-[Add screenshots of curl requests working, or Postman/REST client results]
-
-Example endpoints tested:
-
-- ✅ POST /watchlist/<user_id>/add
-- ✅ GET /watchlist/<user_id>
-- ✅ DELETE /watchlist/<user_id>/remove
 
 ---
 
