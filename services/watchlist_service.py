@@ -9,9 +9,13 @@ from models import Film, WatchlistEntry
 from services.collection_service import FilmNotFoundError
 
 
-def save_to_watchlist(user_id, film_id):
+class AlreadyInWatchlistError(Exception):
+    pass
+
+
+def add_to_watchlist(user_id, film_id):
     """
-    Save a film to a user's watchlist.
+    Add a film to a user's watchlist.
 
     Args:
         user_id (str): UUID of the user.
@@ -22,10 +26,19 @@ def save_to_watchlist(user_id, film_id):
 
     Raises:
         FilmNotFoundError: If film_id does not exist.
+        AlreadyInWatchlistError: If film is already on user's watchlist.
     """
     film = db.session.get(Film, film_id)
     if film is None:
         raise FilmNotFoundError(f"No film found with id '{film_id}'")
+
+    existing = WatchlistEntry.query.filter_by(
+        user_id=user_id, film_id=film_id
+    ).first()
+    if existing is not None:
+        raise AlreadyInWatchlistError(
+            f"Film {film_id} is already on user's watchlist"
+        )
 
     entry = WatchlistEntry(user_id=user_id, film_id=film_id)
     db.session.add(entry)
@@ -59,3 +72,30 @@ def get_watchlist(user_id):
         result.append(film_dict)
 
     return result
+
+
+class NotInWatchlistError(Exception):
+    pass
+
+
+def remove_from_watchlist(user_id, film_id):
+    """
+    Remove a film from a user's watchlist.
+
+    Args:
+        user_id (str): UUID of the user.
+        film_id (int): ID of the film.
+
+    Raises:
+        NotInWatchlistError: If the film is not on the user's watchlist.
+    """
+    entry = WatchlistEntry.query.filter_by(
+        user_id=user_id, film_id=film_id
+    ).first()
+    if entry is None:
+        raise NotInWatchlistError(
+            f"Film {film_id} is not on user's watchlist"
+        )
+
+    db.session.delete(entry)
+    db.session.commit()
