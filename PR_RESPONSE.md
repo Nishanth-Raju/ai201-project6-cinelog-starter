@@ -17,7 +17,7 @@ This document addresses the six code review comments left by @dev-lead on the wa
 
 **Issue**: The PR adds endpoints to view and add films to a watchlist, but there's no way to remove them. This is inconsistent with the collection API.
 
-**Response**: ✅ **RESOLVED**
+**Response**: **RESOLVED**
 
 Added complete removal functionality:
 - **Service function**: `remove_from_watchlist(user_id, film_id)` in `services/watchlist_service.py`
@@ -43,7 +43,7 @@ curl -X DELETE http://localhost:5000/watchlist/{user_id}/remove \
 
 **Issue**: The `save_to_watchlist()` function doesn't check if a film is already on the user's watchlist. This could lead to duplicate entries.
 
-**Response**: ✅ **RESOLVED**
+**Response**: **RESOLVED**
 
 Added duplicate detection with proper error handling:
 - **Exception**: `AlreadyInWatchlistError` raised when attempting to add an already-saved film
@@ -80,7 +80,7 @@ curl -X POST http://localhost:5000/watchlist/{user_id}/add \
 
 **Issue**: The function `save_to_watchlist()` doesn't follow the `verb_to_noun` pattern used elsewhere (e.g., `add_to_collection()`, `remove_from_collection()`).
 
-**Response**: ✅ **RESOLVED**
+**Response**: **RESOLVED**
 
 Renamed function to match established naming pattern:
 - **Old name**: `save_to_watchlist()`
@@ -94,9 +94,9 @@ Renamed function to match established naming pattern:
 **Commit**: `1c86bc4`
 
 **Verification**: All functions in watchlist service now follow `verb_to_noun` pattern:
-- ✅ `add_to_watchlist()` 
-- ✅ `get_watchlist()`
-- ✅ `remove_from_watchlist()`
+- [x] `add_to_watchlist()` 
+- [x] `get_watchlist()`
+- [x] `remove_from_watchlist()`
 
 ---
 
@@ -121,7 +121,7 @@ film_id (int): ID of the film. (Note: integer — pre-refactor)
 
 **Issue**: `app.py` imports from `routes.watchlist.watchlist`, but the `__init__.py` file is missing from the watchlist directory, which could cause import errors.
 
-**Response**: ✅ **RESOLVED**
+**Response**: **RESOLVED**
 
 Added missing `__init__.py` to make watchlist a proper Python package:
 - **File**: `routes/watchlist/__init__.py` (empty marker file)
@@ -137,25 +137,25 @@ Added missing `__init__.py` to make watchlist a proper Python package:
 
 **Issue**: No tests exist for the watchlist service functions. Per CONTRIBUTING.md, each new service function should have tests for: happy path, conflict handling, and nonexistent IDs.
 
-**Response**: ✅ **RESOLVED**
+**Response**: **RESOLVED**
 
 Added comprehensive test suite with 6 tests covering all required scenarios:
 
 **Happy path**:
-- ✅ `test_add_to_watchlist_creates_entry` — Adding a valid film creates a database entry
+- [x] `test_add_to_watchlist_creates_entry` — Adding a valid film creates a database entry
 
 **Duplicate/conflict handling**:
-- ✅ `test_add_to_watchlist_duplicate_raises` — Adding the same film twice raises `AlreadyInWatchlistError`
+- [x] `test_add_to_watchlist_duplicate_raises` — Adding the same film twice raises `AlreadyInWatchlistError`
 
 **Nonexistent ID handling**:
-- ✅ `test_add_to_watchlist_nonexistent_film_raises` — Adding a nonexistent film raises `FilmNotFoundError`
+- [x] `test_add_to_watchlist_nonexistent_film_raises` — Adding a nonexistent film raises `FilmNotFoundError`
 
 **Additional (removal functionality)**:
-- ✅ `test_remove_from_watchlist_deletes_entry` — Removing a film deletes the database entry
-- ✅ `test_remove_from_watchlist_nonexistent_raises` — Removing a non-existent entry raises `NotInWatchlistError`
+- [x] `test_remove_from_watchlist_deletes_entry` — Removing a film deletes the database entry
+- [x] `test_remove_from_watchlist_nonexistent_raises` — Removing a non-existent entry raises `NotInWatchlistError`
 
 **Sorting/consistency**:
-- ✅ `test_get_watchlist_returns_films_sorted_by_title` — Watchlist returns films sorted alphabetically by title
+- [x] `test_get_watchlist_returns_films_sorted_by_title` — Watchlist returns films sorted alphabetically by title
 
 **Test file**: `tests/test_watchlist.py`  
 **Commit**: `405f037`
@@ -183,17 +183,17 @@ Added comprehensive test suite with 6 tests covering all required scenarios:
 
 ## Quality Checklist
 
-- ✅ All commits follow Conventional Commits format
-- ✅ One logical change per commit
-- ✅ Linear history (no merge commits)
-- ✅ Service functions follow `verb_to_noun` naming pattern
-- ✅ Proper exception classes defined
-- ✅ HTTP status codes semantically correct (400, 404, 409, 200, 201)
-- ✅ Tests cover happy path, error cases, and edge cases
-- ✅ Model relationships properly defined
-- ✅ All documentation included in docstrings
-- ✅ App starts successfully
-- ✅ All tests pass (10/10)
+- [x] All commits follow Conventional Commits format
+- [x] One logical change per commit
+- [x] Linear history (no merge commits)
+- [x] Service functions follow `verb_to_noun` naming pattern
+- [x] Proper exception classes defined
+- [x] HTTP status codes semantically correct (400, 404, 409, 200, 201)
+- [x] Tests cover happy path, error cases, and edge cases
+- [x] Model relationships properly defined
+- [x] All documentation included in docstrings
+- [x] App starts successfully
+- [x] All tests pass (10/10)
 
 ---
 
@@ -229,6 +229,39 @@ curl -X DELETE http://localhost:5000/watchlist/{user_id}/remove \
 curl http://localhost:5000/watchlist/{user_id}
 # Response: Empty array (or array without the removed film)
 ```
+
+---
+
+---
+
+## Screenshots & Evidence
+
+### Test Results
+
+```text
+10 passed in 0.68s ✅
+- 4 collection tests (existing)
+- 6 watchlist tests (new)
+```
+
+**Screenshot of test output:**
+[Add screenshot of pytest output here]
+
+### App Running
+
+**Screenshot of Flask app starting successfully:**
+[Add screenshot of app initialization here]
+
+### API Endpoints Working
+
+**Screenshot of successful API calls:**
+[Add screenshots of curl requests working, or Postman/REST client results]
+
+Example endpoints tested:
+
+- ✅ POST /watchlist/<user_id>/add
+- ✅ GET /watchlist/<user_id>
+- ✅ DELETE /watchlist/<user_id>/remove
 
 ---
 
