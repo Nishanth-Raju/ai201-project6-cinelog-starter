@@ -230,15 +230,6 @@ curl http://localhost:5000/watchlist/{user_id}
 # Response: Empty array (or array without the removed film)
 ```
 
----
-
----
-
-## Screenshot of git log:
-
-
-
----
 
 ## Ready for Review
 
